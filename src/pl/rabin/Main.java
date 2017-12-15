@@ -1,8 +1,7 @@
 package pl.rabin;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,41 +11,31 @@ import java.lang.Math;
 
 public class Main {
 
-    public static int p = 11;
-    public static int q = 19;
+    public static int p = 379;
+    public static int q = 383;
 
     public static void main(String[] args) {
 
-        // WORKING CORRECTLY
-        byte[] byteA = new byte[1];
-        byte[] byteB = new byte[1];
+        /*BigInt bigInt = BigInt.valueOf("1234");
+        System.out.println(bigInt.toDecimalString());
+        System.out.println(bigInt.toString());
 
-        byteA[0] = 123;
-        byteB[0] = 4;
+        BigInt some = bigInt.plus(bigInt);
 
-        BigInt a = new BigInt(byteA);
-        BigInt b = new BigInt(byteB);
-
-        BigInt c = a.add(b);
-
-        System.out.println(c);
-
-
-
-
-
+        System.out.println(some);*/
 
         //int message = 106;
         for (int message = 2; message < Main.p * Main.q; message++) {
 
+            BigInteger message_BI = BigInteger.valueOf(message);
+            //int encryptedMessage = encryptMessage(message, Main.p, Main.q);
+            BigInteger encryptedMessage = encryptMessage(BigInteger.valueOf(message), BigInteger.valueOf(Main.p), BigInteger.valueOf(Main.q));
 
-            int encryptedMessage = encryptMessage(message, Main.p, Main.q);
 
-
-            int[] decryptedMessages = decryptMessage(encryptedMessage);
+            BigInteger[] decryptedMessages = decryptMessage(encryptedMessage);
 
             for (int i = 0; i < decryptedMessages.length; i++) {
-                if (decryptedMessages[i] == message) {
+                if (decryptedMessages[i].equals(message_BI)) {
                     System.out.print("M: " + message);
                     System.out.print(" C: " + encryptedMessage);
                     System.out.print(" TRUE " + i);
@@ -66,13 +55,13 @@ public class Main {
         }
 
 
-        /*List<Integer> asdf = Main.getRabinPrimes(14);
+        List<Integer> asdf = Main.getRabinPrimes(14);
 
         for (int i : asdf) {
             System.out.println(i);
         }
 
-        String message = "a";
+        /*String message = "a";
         System.out.println("Message: " + message);
         String encryptedMessage = encryptMessage(message, 379, 383);
         System.out.println("Encrypted message: " + encryptedMessage);
@@ -84,8 +73,8 @@ public class Main {
             System.out.println("Message " + i + ": " + decryptedMessage);
             i++;
         }
-        System.out.println();*/
-
+        System.out.println();
+*/
 
     }
 
@@ -214,6 +203,7 @@ public class Main {
     }
     ///////////////////////////////////////////////////////////////
 
+
     static int powerModulo(int value, int power, int modulo) {
         int e = 1;
 
@@ -227,25 +217,44 @@ public class Main {
         return e;
     }
 
-    static String encryptMessage(String message, int p, int q) {
-        char[] charMessage = message.toCharArray();
-        int n = p * q; // public key
+//    static String encryptMessage(String message, int p, int q) {
+//        char[] charMessage = message.toCharArray();
+//        int n = p * q; // public key
+//
+//        StringBuilder sb = new StringBuilder();
+//        for (int i = 0; i < message.length(); i++) {
+//            int C;
+//            int M = charMessage[i];
+//            C = Main.powerModulo(M, 2, n);
+//            sb.append((char) C);
+//        }
+//
+//        return sb.toString();
+//    }
 
-        StringBuilder sb = new StringBuilder();
+    static BigInteger[] encryptMessage(String message, BigInteger p, BigInteger q) {
+        //char[] charMessage = message.toCharArray();
+        BigInteger n = p.multiply(q); // public key
+
+        BigInteger[] encryptedMessage = new BigInteger[message.length()];
         for (int i = 0; i < message.length(); i++) {
-            int C;
-            int M = charMessage[i];
-            C = Main.powerModulo(M, 2, n);
-            sb.append((char) C);
+            BigInteger M = BigInteger.valueOf(message.codePointAt(i));
+            BigInteger C = M.modPow(BigInteger.valueOf(2), n);
+            encryptedMessage[i] = C;
         }
-
-        return sb.toString();
+        return encryptedMessage;
     }
 
     static int encryptMessage(int M, int p, int q) {
         int n = p * q; // public key
         int C = Main.powerModulo(M, 2, n);
 
+        return C;
+    }
+
+    static BigInteger encryptMessage(BigInteger M, BigInteger p, BigInteger q) {
+        BigInteger n = p.multiply(q);
+        BigInteger C = M.modPow(BigInteger.valueOf(2), n);
         return C;
     }
 
@@ -261,14 +270,87 @@ public class Main {
         return mFactorsArray;
     }
 
-    static int[] calculateABFactors(int p, int q) {
-        int[] abFactors = new int[2];
+    static BigInteger[] calculateMFactors(BigInteger C, int p, int q) {
+        BigInteger[] mFactorsArray = new BigInteger[4];
 
-        abFactors[0] = q * (inverseModulo(q, p)); // a-factor
-        abFactors[1] = p * (inverseModulo(p, q)); // b-factor
+        mFactorsArray[0] = C.modPow(BigInteger.valueOf((p+1) / 4), BigInteger.valueOf(p));
+        mFactorsArray[1] = ( (BigInteger.valueOf(p)).subtract(C.pow((p+1) / 4)) ).mod(BigInteger.valueOf(p));
+        mFactorsArray[2] = C.modPow(BigInteger.valueOf((q+1) / 4), BigInteger.valueOf(q));
+        mFactorsArray[3] = ( (BigInteger.valueOf(q)).subtract(C.pow((q+1) / 4)) ).mod(BigInteger.valueOf(q));
+
+        return mFactorsArray;
+    }
+
+//    static int[] calculateABFactors(int p, int q) {
+//        int[] abFactors = new int[2];
+//
+//        abFactors[0] = q * (inverseModulo(q, p)); // a-factor
+//        abFactors[1] = p * (inverseModulo(p, q)); // b-factor
+//
+//        return abFactors;
+//    }
+
+    static BigInteger[] calculateABFactors(int p, int q) {
+        BigInteger p_BI = BigInteger.valueOf(p);
+        BigInteger q_BI = BigInteger.valueOf(q);
+        BigInteger[] abFactors = new BigInteger[2];
+
+        abFactors[0] = q_BI.multiply( (q_BI.modInverse(p_BI)) );
+        abFactors[1] = p_BI.multiply( (p_BI.modInverse(q_BI)) );
 
         return abFactors;
     }
+
+//    static String[] decryptMessage(String encryptedMessage) {
+//
+//        ///// FOR TESTS
+//        int p = Main.p;
+//        int q = Main.q;
+//        int publicKey = p * q;
+//        /////
+//
+//        StringBuilder sb = new StringBuilder();
+//        String[] messages = new String[4];
+//        int[] encryptedMessageChars = encryptedMessage.chars().toArray();
+//        int[] abFactors = calculateABFactors(p, q); // p and q as tested values
+//
+//        // M1 message
+//        for (int _char : encryptedMessageChars) {
+//            int[] mFactors = calculateMFactors(_char, p, q);
+//            int decryptedChar = (abFactors[0] * mFactors[0] + abFactors[1] * mFactors[2]) % publicKey;
+//            sb.append(decryptedChar);
+//        }
+//        messages[0] = sb.toString();
+//
+//        sb = new StringBuilder();
+//        // M2 message
+//        for (int _char : encryptedMessageChars) {
+//            int[] mFactors = calculateMFactors(_char, p, q);
+//            int decryptedChar = (abFactors[0] * mFactors[0] + abFactors[1] * mFactors[3]) % publicKey;
+//            sb.append(decryptedChar);
+//        }
+//        messages[1] = sb.toString();
+//
+//        sb = new StringBuilder();
+//        // M3 message
+//        for (int _char : encryptedMessageChars) {
+//            int[] mFactors = calculateMFactors(_char, p, q);
+//            int decryptedChar = (abFactors[0] * mFactors[1] + abFactors[1] * mFactors[2]) % publicKey;
+//            sb.append(decryptedChar);
+//        }
+//        messages[2] = sb.toString();
+//
+//        sb = new StringBuilder();
+//        // M4 message
+//        for (int _char : encryptedMessageChars) {
+//            int[] mFactors = calculateMFactors(_char, p, q);
+//            int decryptedChar = (abFactors[0] * mFactors[1] + abFactors[1] * mFactors[3]) % publicKey;
+//            sb.append(decryptedChar);
+//        }
+//        messages[3] = sb.toString();
+//
+//        return messages;
+//    }
 
     static String[] decryptMessage(String encryptedMessage) {
 
@@ -281,12 +363,16 @@ public class Main {
         StringBuilder sb = new StringBuilder();
         String[] messages = new String[4];
         int[] encryptedMessageChars = encryptedMessage.chars().toArray();
-        int[] abFactors = calculateABFactors(p, q); // p and q as tested values
+        BigInteger[] abFactors = calculateABFactors(p, q); // p and q as tested values
 
         // M1 message
         for (int _char : encryptedMessageChars) {
-            int[] mFactors = calculateMFactors(_char, p, q);
-            int decryptedChar = (abFactors[0] * mFactors[0] + abFactors[1] * mFactors[2]) % publicKey;
+            BigInteger[] mFactors = calculateMFactors(BigInteger.valueOf(_char), p, q);
+            int decryptedChar =
+                    (((abFactors[0].multiply(mFactors[0]))
+                    .add((abFactors[1].multiply(mFactors[2]))))
+                    .mod(BigInteger.valueOf(publicKey)))
+                    .intValue();
             sb.append(decryptedChar);
         }
         messages[0] = sb.toString();
@@ -294,8 +380,12 @@ public class Main {
         sb = new StringBuilder();
         // M2 message
         for (int _char : encryptedMessageChars) {
-            int[] mFactors = calculateMFactors(_char, p, q);
-            int decryptedChar = (abFactors[0] * mFactors[0] + abFactors[1] * mFactors[3]) % publicKey;
+            BigInteger[] mFactors = calculateMFactors(BigInteger.valueOf(_char), p, q);
+            int decryptedChar =
+                    (((abFactors[0].multiply(mFactors[0]))
+                            .add((abFactors[1].multiply(mFactors[3]))))
+                            .mod(BigInteger.valueOf(publicKey)))
+                            .intValue();
             sb.append(decryptedChar);
         }
         messages[1] = sb.toString();
@@ -303,8 +393,12 @@ public class Main {
         sb = new StringBuilder();
         // M3 message
         for (int _char : encryptedMessageChars) {
-            int[] mFactors = calculateMFactors(_char, p, q);
-            int decryptedChar = (abFactors[0] * mFactors[1] + abFactors[1] * mFactors[2]) % publicKey;
+            BigInteger[] mFactors = calculateMFactors(BigInteger.valueOf(_char), p, q);
+            int decryptedChar =
+                    (((abFactors[0].multiply(mFactors[1]))
+                            .add((abFactors[1].multiply(mFactors[2]))))
+                            .mod(BigInteger.valueOf(publicKey)))
+                            .intValue();
             sb.append(decryptedChar);
         }
         messages[2] = sb.toString();
@@ -312,8 +406,12 @@ public class Main {
         sb = new StringBuilder();
         // M4 message
         for (int _char : encryptedMessageChars) {
-            int[] mFactors = calculateMFactors(_char, p, q);
-            int decryptedChar = (abFactors[0] * mFactors[1] + abFactors[1] * mFactors[3]) % publicKey;
+            BigInteger[] mFactors = calculateMFactors(BigInteger.valueOf(_char), p, q);
+            int decryptedChar =
+                    (((abFactors[0].multiply(mFactors[1]))
+                            .add((abFactors[1].multiply(mFactors[3]))))
+                            .mod(BigInteger.valueOf(publicKey)))
+                            .intValue();
             sb.append(decryptedChar);
         }
         messages[3] = sb.toString();
@@ -321,7 +419,42 @@ public class Main {
         return messages;
     }
 
-    static int[] decryptMessage(int encryptedMessage) {
+//    static int[] decryptMessage(int encryptedMessage) {
+//
+//        ///// FOR TESTS
+//        int p = Main.p;
+//        int q = Main.q;
+//        int publicKey = p * q;
+//        /////
+//
+//        int[] messages = new int[4];
+//        int[] abFactors = calculateABFactors(p, q); // p and q as tested values
+//
+//        // M1 message
+//        int[] mFactors = calculateMFactors(encryptedMessage, p, q);
+//        int decryptedInt = (abFactors[0] * mFactors[0] + abFactors[1] * mFactors[2]) % publicKey;
+//        messages[0] = decryptedInt;
+//
+//        // M2 message
+//        mFactors = calculateMFactors(encryptedMessage, p, q);
+//        decryptedInt = (abFactors[0] * mFactors[0] + abFactors[1] * mFactors[3]) % publicKey;
+//        messages[1] = decryptedInt;
+//
+//        // M3 message
+//        mFactors = calculateMFactors(encryptedMessage, p, q);
+//        decryptedInt = (abFactors[0] * mFactors[1] + abFactors[1] * mFactors[2]) % publicKey;
+//        messages[2] = decryptedInt;
+//
+//
+//        // M4 message
+//        mFactors = calculateMFactors(encryptedMessage, p, q);
+//        decryptedInt = (abFactors[0] * mFactors[1] + abFactors[1] * mFactors[3]) % publicKey;
+//        messages[3] = decryptedInt;
+//
+//        return messages;
+//    }
+
+    static BigInteger[] decryptMessage(BigInteger encryptedMessage) {
 
         ///// FOR TESTS
         int p = Main.p;
@@ -329,32 +462,38 @@ public class Main {
         int publicKey = p * q;
         /////
 
-        int[] messages = new int[4];
-        int[] abFactors = calculateABFactors(p, q); // p and q as tested values
+        BigInteger[] messages = new BigInteger[4];
+        BigInteger[] abFactors = calculateABFactors(p, q); // p and q as tested values
 
         // M1 message
-        int[] mFactors = calculateMFactors(encryptedMessage, p, q);
-        int decryptedInt = (abFactors[0] * mFactors[0] + abFactors[1] * mFactors[2]) % publicKey;
+        BigInteger[] mFactors = calculateMFactors(encryptedMessage, p, q);
+        BigInteger decryptedInt = (((abFactors[0].multiply(mFactors[0]))
+                .add((abFactors[1].multiply(mFactors[2]))))
+                .mod(BigInteger.valueOf(publicKey)));
         messages[0] = decryptedInt;
 
         // M2 message
-        mFactors = calculateMFactors(encryptedMessage, p, q);
-        decryptedInt = (abFactors[0] * mFactors[0] + abFactors[1] * mFactors[3]) % publicKey;
+        decryptedInt = (((abFactors[0].multiply(mFactors[0]))
+                .add((abFactors[1].multiply(mFactors[3]))))
+                .mod(BigInteger.valueOf(publicKey)));
         messages[1] = decryptedInt;
 
         // M3 message
-        mFactors = calculateMFactors(encryptedMessage, p, q);
-        decryptedInt = (abFactors[0] * mFactors[1] + abFactors[1] * mFactors[2]) % publicKey;
+        decryptedInt = (((abFactors[0].multiply(mFactors[1]))
+                .add((abFactors[1].multiply(mFactors[2]))))
+                .mod(BigInteger.valueOf(publicKey)));
         messages[2] = decryptedInt;
 
 
         // M4 message
-        mFactors = calculateMFactors(encryptedMessage, p, q);
-        decryptedInt = (abFactors[0] * mFactors[1] + abFactors[1] * mFactors[3]) % publicKey;
+        decryptedInt = (((abFactors[0].multiply(mFactors[1]))
+                .add((abFactors[1].multiply(mFactors[3]))))
+                .mod(BigInteger.valueOf(publicKey)));
         messages[3] = decryptedInt;
 
         return messages;
     }
+
 
 
 }
