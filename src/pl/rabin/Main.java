@@ -18,6 +18,23 @@ public class Main {
     public static void main(String[] args) {
 
         // WORKING CORRECTLY
+        byte[] byteA = new byte[1];
+        byte[] byteB = new byte[1];
+
+        byteA[0] = 123;
+        byteB[0] = 4;
+
+        BigInt a = new BigInt(byteA);
+        BigInt b = new BigInt(byteB);
+
+        BigInt c = a.add(b);
+
+        System.out.println(c);
+
+
+
+
+
 
         //int message = 106;
         for (int message = 2; message < Main.p * Main.q; message++) {
@@ -237,9 +254,9 @@ public class Main {
         int[] mFactorsArray = new int[4];
 
         mFactorsArray[0] = powerModulo(C, (p + 1) / 4, p);
-        mFactorsArray[1] = powerModulo(p - Math.pow(C, (p+1)/4), 1, p); //C ^ ((p + 1) / 4)
+        mFactorsArray[1] = powerModulo(p - (int)Math.pow(C, (p+1)/4), 1, p); //C ^ ((p + 1) / 4)
         mFactorsArray[2] = powerModulo(C, (q + 1) / 4, q);
-        mFactorsArray[3] = powerModulo(q - Math.pow(C, (q+1)/4), 1, q); //C ^ ((q + 1) / 4)
+        mFactorsArray[3] = powerModulo(q - (int)Math.pow(C, (q+1)/4), 1, q); //C ^ ((q + 1) / 4)
 
         return mFactorsArray;
     }
