@@ -2,6 +2,8 @@ package pl.rabin;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,21 +13,34 @@ import java.lang.Math;
 
 public class Main {
 
-    public static int p = 379;
-    public static int q = 383;
+    public static BigInteger p = BigInteger.valueOf(379);
+    public static BigInteger q = BigInteger.valueOf(383);
 
     public static void main(String[] args) {
 
-        /*BigInt bigInt = BigInt.valueOf("1234");
-        System.out.println(bigInt.toDecimalString());
-        System.out.println(bigInt.toString());
+        String message = "rafal to pies";
+        byte[] b = message.getBytes();
+        String newStr = new String(b);
+        System.out.println(newStr);
 
-        BigInt some = bigInt.plus(bigInt);
 
-        System.out.println(some);*/
+        BigInteger[] encryptedMessage = encryptMessage(message.getBytes(), p, q);
+
+        System.out.println(getEncryptedMessage(encryptedMessage));
+
+        BigInteger[] some = convertStringToArray(getEncryptedMessage(encryptedMessage));
+        System.out.println(decryptMessage(encryptedMessage));
+
+
+        //String decMess = decryptMessage(new String(encMess1));
+        //BigInteger[] decMess = decryptMessage(new BigInteger(encMess1));
+
+        //for (BigInteger mess : decMess) {
+        //    System.out.println(new String(mess.toByteArray()));
+       // }
 
         //int message = 106;
-        for (int message = 2; message < Main.p * Main.q; message++) {
+       /* for (int message = 2; message < Main.p * Main.q; message++) {
 
             BigInteger message_BI = BigInteger.valueOf(message);
             //int encryptedMessage = encryptMessage(message, Main.p, Main.q);
@@ -59,7 +74,7 @@ public class Main {
 
         for (int i : asdf) {
             System.out.println(i);
-        }
+        }*/
 
         /*String message = "a";
         System.out.println("Message: " + message);
@@ -252,9 +267,32 @@ public class Main {
         return C;
     }
 
-    static BigInteger encryptMessage(BigInteger M, BigInteger p, BigInteger q) {
+    static String getEncryptedMessage(BigInteger[] message) {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < message.length; i++) {
+            sb.append(message[i].toString());
+            sb.append('_');
+        }
+        return sb.toString();
+    }
+
+    static BigInteger[] encryptMessage(byte[] M, BigInteger p, BigInteger q) {
         BigInteger n = p.multiply(q);
-        BigInteger C = M.modPow(BigInteger.valueOf(2), n);
+
+        BigInteger[] C = new BigInteger[M.length];
+
+        for (int i = 0; i < M.length; i++) {
+            BigInteger temp = new BigInteger(new byte[] { M[i], M[i] }); // podwojona wiadomosc - suma kontrolna
+
+            if (temp.compareTo(n) >= 0)
+                throw new IllegalArgumentException("Block cannot be more than n");
+
+            byte[] tempArray = temp.modPow(BigInteger.valueOf(2), n).toByteArray();
+
+            C[i] = new BigInteger(tempArray);
+        }
+
         return C;
     }
 
@@ -352,7 +390,7 @@ public class Main {
 //        return messages;
 //    }
 
-    static String[] decryptMessage(String encryptedMessage) {
+    /*static String[] decryptMessage(String encryptedMessage) {
 
         ///// FOR TESTS
         int p = Main.p;
@@ -417,7 +455,7 @@ public class Main {
         messages[3] = sb.toString();
 
         return messages;
-    }
+    }*/
 
 //    static int[] decryptMessage(int encryptedMessage) {
 //
@@ -457,44 +495,160 @@ public class Main {
     static BigInteger[] decryptMessage(BigInteger encryptedMessage) {
 
         ///// FOR TESTS
-        int p = Main.p;
-        int q = Main.q;
-        int publicKey = p * q;
+        BigInteger publicKey = p.multiply(q);
         /////
 
         BigInteger[] messages = new BigInteger[4];
-        BigInteger[] abFactors = calculateABFactors(p, q); // p and q as tested values
+        BigInteger[] abFactors = calculateABFactors(p.intValue(), q.intValue()); // p and q as tested values
 
         // M1 message
-        BigInteger[] mFactors = calculateMFactors(encryptedMessage, p, q);
+        BigInteger[] mFactors = calculateMFactors(encryptedMessage, p.intValue(), q.intValue());
         BigInteger decryptedInt = (((abFactors[0].multiply(mFactors[0]))
                 .add((abFactors[1].multiply(mFactors[2]))))
-                .mod(BigInteger.valueOf(publicKey)));
+                .mod(publicKey));
         messages[0] = decryptedInt;
 
         // M2 message
         decryptedInt = (((abFactors[0].multiply(mFactors[0]))
                 .add((abFactors[1].multiply(mFactors[3]))))
-                .mod(BigInteger.valueOf(publicKey)));
+                .mod(publicKey));
         messages[1] = decryptedInt;
 
         // M3 message
         decryptedInt = (((abFactors[0].multiply(mFactors[1]))
                 .add((abFactors[1].multiply(mFactors[2]))))
-                .mod(BigInteger.valueOf(publicKey)));
+                .mod(publicKey));
         messages[2] = decryptedInt;
 
 
         // M4 message
         decryptedInt = (((abFactors[0].multiply(mFactors[1]))
                 .add((abFactors[1].multiply(mFactors[3]))))
-                .mod(BigInteger.valueOf(publicKey)));
+                .mod(publicKey));
         messages[3] = decryptedInt;
 
         return messages;
     }
 
+//    static String[] decryptMessage(String encryptedMessage) {
+//
+//        StringBuilder sb1 = new StringBuilder();
+//        StringBuilder sb2 = new StringBuilder();
+//        StringBuilder sb3 = new StringBuilder();
+//        StringBuilder sb4 = new StringBuilder();
+//
+//        ///// FOR TESTS
+//        BigInteger publicKey = p.multiply(q);
+//        /////
+//
+//        String[] messages = new String[4];
+//        BigInteger[] abFactors = calculateABFactors(p.intValue(), q.intValue()); // p and q as tested values
+//
+//        for (int i = 0; i < encryptedMessage.length(); i++) {
+//            // M1 message
+//            BigInteger[] mFactors = calculateMFactors(BigInteger.valueOf(encryptedMessage.codePointAt(i)), p.intValue(), q.intValue());
+//            char decryptedChar = (char)(((abFactors[0].multiply(mFactors[0]))
+//                    .add((abFactors[1].multiply(mFactors[2]))))
+//                    .mod(publicKey)).intValue();
+//            sb1.append(decryptedChar);
+//
+//            // M2 message
+//            char decryptedChar1 = (char)(((abFactors[0].multiply(mFactors[0]))
+//                    .add((abFactors[1].multiply(mFactors[3]))))
+//                    .mod(publicKey)).intValue();
+//            sb2.append((char)decryptedChar1);
+//
+//            // M3 message
+//            char decryptedChar2 = (char)(((abFactors[0].multiply(mFactors[1]))
+//                    .add((abFactors[1].multiply(mFactors[2]))))
+//                    .mod(publicKey)).intValue();
+//            sb3.append((char)decryptedChar2);
+//
+//
+//            // M4 message
+//            char decryptedChar3 = (char)(((abFactors[0].multiply(mFactors[1]))
+//                    .add((abFactors[1].multiply(mFactors[3]))))
+//                    .mod(publicKey)).intValue();
+//            sb4.append((char)decryptedChar3);
+//        }
+//
+//        messages[0] = sb1.toString();
+//        messages[1] = sb2.toString();
+//        messages[2] = sb3.toString();
+//        messages[3] = sb4.toString();
+//
+//        return messages;
+//    }
 
+    static BigInteger[] convertStringToArray(String encryptedMessage) {
+        String[] tabValues = encryptedMessage.split("\\_");
+        BigInteger[] array = new BigInteger[tabValues.length];
+
+        for (int i = 0; i < array.length; i++)
+            array[i] = new BigInteger(tabValues[i]);
+
+        return array;
+    }
+
+    static String decryptMessage(BigInteger[] encryptedMessage) {
+
+        StringBuilder sb = new StringBuilder();
+
+        ///// FOR TESTS
+        BigInteger publicKey = p.multiply(q);
+        /////
+
+        BigInteger[] abFactors = calculateABFactors(p.intValue(), q.intValue()); // p and q as tested values
+
+        for (int i = 0; i < encryptedMessage.length; i++) {
+            BigInteger[] mFactors = calculateMFactors(encryptedMessage[i], p.intValue(), q.intValue());
+
+            // M1 message
+            BigInteger decryptedChar = (((abFactors[0].multiply(mFactors[0]))
+                    .add((abFactors[1].multiply(mFactors[2]))))
+                    .mod(publicKey));
+
+            byte[] tempBytes = decryptedChar.toByteArray();
+            if (tempBytes.length == 2 && (tempBytes[0] == tempBytes[1])) {
+                sb.append((char) tempBytes[0]);
+                continue;
+            }
+
+            // M2 message
+            BigInteger decryptedChar1 = (((abFactors[0].multiply(mFactors[0]))
+                    .add((abFactors[1].multiply(mFactors[3]))))
+                    .mod(publicKey));
+
+            tempBytes = decryptedChar1.toByteArray();
+            if (tempBytes.length == 2 && (tempBytes[0] == tempBytes[1])) {
+                sb.append((char) tempBytes[0]);
+                continue;
+            }
+
+            // M3 message
+            BigInteger decryptedChar2 = (((abFactors[0].multiply(mFactors[1]))
+                    .add((abFactors[1].multiply(mFactors[2]))))
+                    .mod(publicKey));
+
+            tempBytes = decryptedChar2.toByteArray();
+            if (tempBytes.length == 2 && (tempBytes[0] == tempBytes[1])) {
+                sb.append((char) tempBytes[0]);
+                continue;
+            }
+
+            // M4 message
+            BigInteger decryptedChar3 = (((abFactors[0].multiply(mFactors[1]))
+                    .add((abFactors[1].multiply(mFactors[3]))))
+                    .mod(publicKey));
+
+            tempBytes = decryptedChar3.toByteArray();
+            if (tempBytes.length == 2 && (tempBytes[0] == tempBytes[1])) {
+                sb.append((char) tempBytes[0]);
+            }
+        }
+
+        return sb.toString();
+    }
 
 }
 
