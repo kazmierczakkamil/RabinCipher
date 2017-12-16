@@ -1,25 +1,32 @@
 package pl.rabin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Rabin {
 
-    private int[] privateKeys;
-    private int publicKey;
+    static List<Integer> getRabinPrimes(int amount) {
+        List<Integer> primeRabinNumbers = new ArrayList<>();
 
-    Rabin() {
-        privateKeys = new int[2];
-        privateKeys[0] = Main.rollCorrectPrime(Main.getRabinPrimes(40));
-        privateKeys[1] = Main.rollCorrectPrime(Main.getRabinPrimes(40));
-        publicKey = privateKeys[0] * privateKeys[1];
-    }
+        int number = 3;
 
-    // chyba kazdy bit w ten sposob
-    // todo: dlugosc wiadomosci mniejsza niz n
-    // todo: wtedy c = m^2 mod n
+        while (primeRabinNumbers.size() < amount) {
+            boolean isPrime = true;
 
-    public void printInfo() {
-        System.out.println("p = " + privateKeys[0]);
-        System.out.println("q = " + privateKeys[1]);
-        System.out.println("n = " + publicKey);
+            for (int j = number - 1; j > 1; j--) {
+                if (number % j == 0) {
+                    isPrime = false;
+                    break;
+                }
+            }
+
+            if (isPrime && number % 4 == 3)
+                primeRabinNumbers.add(number);
+
+            number++;
+        }
+
+        return primeRabinNumbers;
     }
 
 }
