@@ -6,6 +6,8 @@ import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.math.BigInteger;
+import pl.rabin.Main;
 
 import static pl.rabin.Main.*;
 
@@ -17,7 +19,6 @@ public class rabin {
     private JButton encryptButton;
     private JPanel encryptPanel;
     private JPanel decryptPanel;
-    private JTextField encryptedMessageFieldBeforeDecrypted;
     private JTextField keyBeforeDecrypted;
     private JButton decryptButton;
     private JTextField messageFieldAfterDecrypted;
@@ -41,6 +42,19 @@ public class rabin {
     private JButton decryptFileButton;
     private JButton openKeyFileButton;
     private JTextField decryptedFilePath;
+
+    private JTextField publicKey1;
+    private JTextField publicKey2;
+    private JTextField privateKeyP1;
+    private JTextField privateKeyP2;
+    private JTextField privateKeyQ1;
+    private JTextField privateKeyQ2;
+    private JTextField messageBeforeEncryptedField;
+    private JTextField messageBeforeDecryptedField;
+    private JTextField messageAfterEncryptedField;
+    private JTextField messageAfterDecryptedField;
+
+
     private byte[] bytesKey;
 
 
@@ -48,50 +62,26 @@ public class rabin {
         encryptButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String message = messageFieldBeforeEncrypted.getText();
-                String key = keyBeforeEncrypted.getText();
-                String decryptedMessage = encryptMessage(message, key);
-                encryptedMessageFieldAfterEncrypted.setText(decryptedMessage);
-                encryptedMessageFieldBeforeDecrypted.setText(decryptedMessage);
+                String message = messageBeforeEncryptedField.getText();
+                BigInteger p = new BigInteger(privateKeyP1.getText());
+                BigInteger q = new BigInteger(privateKeyQ1.getText());
+                BigInteger publicKey = p.multiply(q);
+                publicKey1.setText(publicKey.toString());
+                BigInteger[] encryptedMessage = Main.encryptMessage(message.getBytes(), p, q);
+                String encryptedMessageString = getEncryptedMessage(encryptedMessage);
+                messageAfterEncryptedField.setText(encryptedMessageString);
             }
         });
 
-        messageFieldBeforeEncrypted.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                update();
-            }
-
-            void update() {
-                String message = messageFieldBeforeEncrypted.getText();
-                int size = message.length();
-                String keyValue = generateRandomString(size);
-                keyBeforeEncrypted.setText(null);
-                keyBeforeEncrypted.setText(String.valueOf(keyValue));
-                keyBeforeDecrypted.setText(String.valueOf(keyValue));
-
-                encryptedMessageFieldAfterEncrypted.setText(null);
-                encryptedMessageFieldBeforeDecrypted.setText(null);
-            }
-        });
 
         decryptButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String encryptedMessage = encryptedMessageFieldBeforeDecrypted.getText();
-                String salt = keyBeforeDecrypted.getText();
-                String message = decryptMessage(encryptedMessage, salt);
-                messageFieldAfterDecrypted.setText(message);
+                String encryptedMessage = messageAfterEncryptedField.getText();
+                BigInteger p = new BigInteger(privateKeyP2.getText());
+                BigInteger q = new BigInteger(privateKeyQ2.getText());
+                String decryptedMessage = decryptMessage(convertStringToArray(encryptedMessage), p, q);
+                messageAfterDecryptedField.setText(decryptedMessage);
             }
         });
 
@@ -107,6 +97,7 @@ public class rabin {
                 }
             }
         });
+
         fileToEncryptPath.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -130,7 +121,7 @@ public class rabin {
                     return;
                 }
 
-                setBytesKey(generateRandomByte(getFileSize(filename)));
+                //setBytesKey(generateRandomByte(getFileSize(filename)));
             }
         });
         encryptFileButton.addActionListener(new ActionListener() {
@@ -144,12 +135,12 @@ public class rabin {
                     return;
                 }
 
-                saveByteArrayToFile(getBytesKey(), keyValueFilename);
+                /*saveByteArrayToFile(getBytesKey(), keyValueFilename);
                 encryptFile(new File(
                         fileToEncryptPath.getText()).toPath(),
                         encryptedFilename,
                         convertFileToByteArray(new File(keyValueFilename).toPath()
-                        ));
+                        ));*/
 
                 JOptionPane.showMessageDialog(getPanel1(), "Encrypted successfully.");
 
@@ -193,9 +184,9 @@ public class rabin {
                     return;
                 }
 
-                byte[] byteKey = convertFileToByteArray(new File(keyFilename).toPath());
-                decryptFile(new File(encryptedFilename).toPath(), decryptedFilename, byteKey);
-                JOptionPane.showMessageDialog(getPanel1(), "Decrypted file was saved successfully!");
+//                byte[] byteKey = convertFileToByteArray(new File(keyFilename).toPath());
+//                decryptFile(new File(encryptedFilename).toPath(), decryptedFilename, byteKey);
+//                JOptionPane.showMessageDialog(getPanel1(), "Decrypted file was saved successfully!");
 
             }
         });
@@ -215,8 +206,8 @@ public class rabin {
     }
 
     public static void main(String[] args) {
-        JFrame jframe = new JFrame("OneTimePad");
-        jframe.setContentPane(new OneTimePad().panel1);
+        JFrame jframe = new JFrame("Rabin");
+        jframe.setContentPane(new rabin().panel1);
         jframe.setDefaultCloseOperation(jframe.EXIT_ON_CLOSE);
         jframe.pack();
         jframe.setLocationRelativeTo(null);

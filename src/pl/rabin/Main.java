@@ -1,5 +1,6 @@
 package pl.rabin;
 
+import javax.swing.*;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
@@ -10,7 +11,8 @@ public class Main {
     public static BigInteger p = BigInteger.valueOf(379);
     public static BigInteger q = BigInteger.valueOf(383);
 
-    public static void main(String[] args) {
+
+    /*public static void main(String[] args) {
 
         String message = "No niby dziala";
         byte[] b = message.getBytes();
@@ -26,7 +28,7 @@ public class Main {
         System.out.println(decryptMessage(encryptedMessage));
 
 
-    }
+    }*/
 
 
 
@@ -72,7 +74,7 @@ public class Main {
         return encryptedMessage;
     }
 
-    static String getEncryptedMessage(BigInteger[] message) {
+    public static String getEncryptedMessage(BigInteger[] message) {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < message.length; i++) {
@@ -82,7 +84,7 @@ public class Main {
         return sb.toString();
     }
 
-    static BigInteger[] encryptMessage(byte[] M, BigInteger p, BigInteger q) { // kazdy bajt jako jeden znak
+    public static BigInteger[] encryptMessage(byte[] M, BigInteger p, BigInteger q) { // kazdy bajt jako jeden znak
         BigInteger n = p.multiply(q);
 
         BigInteger[] C = new BigInteger[M.length];
@@ -163,7 +165,7 @@ public class Main {
     }
 
 
-    static BigInteger[] convertStringToArray(String encryptedMessage) {
+    public static BigInteger[] convertStringToArray(String encryptedMessage) {
         String[] tabValues = encryptedMessage.split("\\_");
         BigInteger[] array = new BigInteger[tabValues.length];
 
@@ -173,7 +175,7 @@ public class Main {
         return array;
     }
 
-    static String decryptMessage(BigInteger[] encryptedMessage) {
+    public static String decryptMessage(BigInteger[] encryptedMessage, BigInteger p, BigInteger q) {
 
         StringBuilder sb = new StringBuilder();
 
