@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="panel1" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="500" height="462"/>
+      <xy x="20" y="20" width="500" height="478"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -243,7 +243,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="10143" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="10143" layout-manager="GridLayoutManager" row-count="6" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -272,37 +272,19 @@
                   </component>
                   <component id="ca969" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="Key file path:"/>
+                      <text value="Public key:"/>
                     </properties>
                   </component>
-                  <component id="98b3f" class="javax.swing.JTextField" binding="keyFilePath">
+                  <component id="98b3f" class="javax.swing.JTextField" binding="publicKey3">
                     <constraints>
-                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
                     <properties/>
-                  </component>
-                  <component id="96474" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Encrypted file path:"/>
-                    </properties>
-                  </component>
-                  <component id="3fd3" class="javax.swing.JTextField" binding="encryptedFilePath">
-                    <constraints>
-                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <text value=""/>
-                    </properties>
                   </component>
                   <component id="c3db6" class="javax.swing.JTextField" binding="fileToEncryptPath">
                     <constraints>
@@ -314,15 +296,63 @@
                   </component>
                   <component id="43664" class="javax.swing.JButton" binding="encryptFileButton">
                     <constraints>
-                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value="Encrypt"/>
                     </properties>
                   </component>
+                  <component id="7f097" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Private key (p):"/>
+                    </properties>
+                  </component>
+                  <component id="72ec0" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Private key (q):"/>
+                    </properties>
+                  </component>
+                  <component id="ad19b" class="javax.swing.JTextField" binding="privateKeyP3">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="ae5d5" class="javax.swing.JTextField" binding="privateKeyQ3">
+                    <constraints>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="f873a" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Encrypted filename:"/>
+                    </properties>
+                  </component>
+                  <component id="3006d" class="javax.swing.JTextField" binding="encryptedFilename">
+                    <constraints>
+                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
                 </children>
               </grid>
-              <grid id="8c101" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="8c101" layout-manager="GridLayoutManager" row-count="6" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -341,30 +371,12 @@
                       <text value="Open"/>
                     </properties>
                   </component>
-                  <component id="5b917" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Key file path:"/>
-                    </properties>
-                  </component>
-                  <component id="2b472" class="javax.swing.JTextField" binding="keyFilePath1">
-                    <constraints>
-                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <text value=""/>
-                    </properties>
-                  </component>
                   <component id="e48ba" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="Decrypted file path:"/>
+                      <text value="Decrypted filename:"/>
                     </properties>
                   </component>
                   <component id="46882" class="javax.swing.JLabel">
@@ -385,25 +397,65 @@
                       <text value=""/>
                     </properties>
                   </component>
-                  <component id="d6b09" class="javax.swing.JButton" binding="openKeyFileButton">
-                    <constraints>
-                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Open"/>
-                    </properties>
-                  </component>
                   <component id="c81f1" class="javax.swing.JButton" binding="decryptFileButton">
                     <constraints>
-                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value="Decrypt"/>
                     </properties>
                   </component>
-                  <component id="d4e58" class="javax.swing.JTextField" binding="decryptedFilePath">
+                  <component id="d4e58" class="javax.swing.JTextField" binding="decryptedFilename">
+                    <constraints>
+                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="309e0" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Private key (p):"/>
+                    </properties>
+                  </component>
+                  <component id="87aaf" class="javax.swing.JTextField" binding="privateKeyP4">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="e557b" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Private key (q):"/>
+                    </properties>
+                  </component>
+                  <component id="8a551" class="javax.swing.JTextField" binding="privateKeyQ4">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="37052" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Public key:"/>
+                    </properties>
+                  </component>
+                  <component id="7cf0" class="javax.swing.JTextField" binding="publicKey4">
+                    <constraints>
+                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>

@@ -33,7 +33,7 @@ public class rabin {
     private JPanel panel1;
     private JButton openFileToEncryptButton;
     private JTextField fileToEncryptPath;
-    private JTextField keyFilePath;
+    private JTextField publicKey3;
     private JTextField encryptedFilePath;
     private JButton openFileToDecryptButton;
     private JTextField keyFilePath1;
@@ -41,7 +41,7 @@ public class rabin {
     private JButton encryptFileButton;
     private JButton decryptFileButton;
     private JButton openKeyFileButton;
-    private JTextField decryptedFilePath;
+    private JTextField decryptedFilename;
 
     private JTextField publicKey1;
     private JTextField publicKey2;
@@ -53,9 +53,14 @@ public class rabin {
     private JTextField messageBeforeDecryptedField;
     private JTextField messageAfterEncryptedField;
     private JTextField messageAfterDecryptedField;
+    private JTextField privateKeyP3;
+    private JTextField privateKeyQ3;
+    private JTextField privateKeyP4;
+    private JTextField privateKeyQ4;
+    private JTextField publicKey4;
+    private JTextField encryptedFilename;
 
 
-    private byte[] bytesKey;
 
 
     public rabin() {
@@ -67,8 +72,10 @@ public class rabin {
                 BigInteger q = new BigInteger(privateKeyQ1.getText());
                 BigInteger publicKey = p.multiply(q);
                 publicKey1.setText(publicKey.toString());
+                //BigInteger[] encryptedMessage = Main.encryptMessage(message.getBytes(), p, q);
                 BigInteger[] encryptedMessage = Main.encryptMessage(message.getBytes(), p, q);
                 String encryptedMessageString = getEncryptedMessage(encryptedMessage);
+
                 messageAfterEncryptedField.setText(encryptedMessageString);
             }
         });
@@ -121,26 +128,22 @@ public class rabin {
                     return;
                 }
 
-                //setBytesKey(generateRandomByte(getFileSize(filename)));
+
             }
         });
         encryptFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String keyValueFilename = keyFilePath.getText();
-                String encryptedFilename = encryptedFilePath.getText();
+                String encryptedFilenameString = encryptedFilename.getText();
+                BigInteger p = new BigInteger(privateKeyP3.getText());
+                BigInteger q = new BigInteger(privateKeyQ3.getText());
 
-                if (keyValueFilename.equals("") || encryptedFilename.equals("")) {
+                if (encryptedFilenameString.equals("")) {
                     JOptionPane.showMessageDialog(getPanel1(), "Error. You must set all fields!");
                     return;
                 }
 
-                /*saveByteArrayToFile(getBytesKey(), keyValueFilename);
-                encryptFile(new File(
-                        fileToEncryptPath.getText()).toPath(),
-                        encryptedFilename,
-                        convertFileToByteArray(new File(keyValueFilename).toPath()
-                        ));*/
+                encryptFile(new File(fileToEncryptPath.getText()).toPath(), encryptedFilenameString, p, q);
 
                 JOptionPane.showMessageDialog(getPanel1(), "Encrypted successfully.");
 
@@ -160,46 +163,27 @@ public class rabin {
             }
         });
 
-        openKeyFileButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser c = new JFileChooser();
-                int rVal = c.showOpenDialog(fileChooser);
-                if (rVal == JFileChooser.APPROVE_OPTION) {
-                    String keyFilename = c.getSelectedFile().getPath();
-                    keyFilePath1.setText(keyFilename);
-                }
-            }
-        });
-
         decryptFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String keyFilename = keyFilePath1.getText();
                 String encryptedFilename = fileToDecryptPath.getText();
-                String decryptedFilename = decryptedFilePath.getText();
+                String decryptedFilename = rabin.this.decryptedFilename.getText();
+                BigInteger p = new BigInteger(privateKeyP4.getText());
+                BigInteger q = new BigInteger(privateKeyQ4.getText());
 
-                if (keyFilename.equals("") || encryptedFilename.equals("") || decryptedFilename.equals("")) {
+                if (encryptedFilename.equals("") || decryptedFilename.equals("")) {
                     JOptionPane.showMessageDialog(getPanel1(), "All fields must be set!");
                     return;
                 }
 
-//                byte[] byteKey = convertFileToByteArray(new File(keyFilename).toPath());
-//                decryptFile(new File(encryptedFilename).toPath(), decryptedFilename, byteKey);
-//                JOptionPane.showMessageDialog(getPanel1(), "Decrypted file was saved successfully!");
+                decryptFile(new File(encryptedFilename).toPath(), decryptedFilename, p, q);
+                JOptionPane.showMessageDialog(getPanel1(), "Decrypted file was saved successfully!");
 
             }
         });
 
     }
 
-    public byte[] getBytesKey() {
-        return bytesKey;
-    }
-
-    public void setBytesKey(byte[] bytesKey) {
-        this.bytesKey = bytesKey;
-    }
 
     public JPanel getPanel1() {
         return panel1;

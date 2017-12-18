@@ -1,7 +1,13 @@
 package pl.rabin;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
@@ -29,7 +35,6 @@ public class Main {
 
 
     }*/
-
 
 
     // roll one number
@@ -79,7 +84,8 @@ public class Main {
 
         for (int i = 0; i < message.length; i++) {
             sb.append(message[i].toString());
-            sb.append('_');
+            if (i != message.length - 1)
+                sb.append('_');
         }
         return sb.toString();
     }
@@ -102,14 +108,15 @@ public class Main {
         return C;
     }
 
+
+
     static BigInteger[] calculateMFactors(BigInteger C, int p, int q) {
         BigInteger[] mFactorsArray = new BigInteger[4];
 
-        mFactorsArray[0] = C.modPow(BigInteger.valueOf((p+1) / 4), BigInteger.valueOf(p));
-        mFactorsArray[1] = ( (BigInteger.valueOf(p)).subtract(C.pow((p+1) / 4)) ).mod(BigInteger.valueOf(p));
-        mFactorsArray[2] = C.modPow(BigInteger.valueOf((q+1) / 4), BigInteger.valueOf(q));
-        mFactorsArray[3] = ( (BigInteger.valueOf(q)).subtract(C.pow((q+1) / 4)) ).mod(BigInteger.valueOf(q));
-
+        mFactorsArray[0] = C.modPow(BigInteger.valueOf((p + 1) / 4), BigInteger.valueOf(p));
+        mFactorsArray[1] = ((BigInteger.valueOf(p)).subtract(C.pow((p + 1) / 4))).mod(BigInteger.valueOf(p));
+        mFactorsArray[2] = C.modPow(BigInteger.valueOf((q + 1) / 4), BigInteger.valueOf(q));
+        mFactorsArray[3] = ((BigInteger.valueOf(q)).subtract(C.pow((q + 1) / 4))).mod(BigInteger.valueOf(q));
         return mFactorsArray;
     }
 
@@ -119,8 +126,8 @@ public class Main {
         BigInteger q_BI = BigInteger.valueOf(q);
         BigInteger[] abFactors = new BigInteger[2];
 
-        abFactors[0] = q_BI.multiply( (q_BI.modInverse(p_BI)) );
-        abFactors[1] = p_BI.multiply( (p_BI.modInverse(q_BI)) );
+        abFactors[0] = q_BI.multiply((q_BI.modInverse(p_BI)));
+        abFactors[1] = p_BI.multiply((p_BI.modInverse(q_BI)));
 
         return abFactors;
     }
@@ -233,6 +240,77 @@ public class Main {
         }
 
         return sb.toString();
+    }
+
+
+
+    public static void encryptFile(Path path, String newFilename, BigInteger p, BigInteger q) {
+        byte[] file = convertFileToByteArray(path);
+        byte[] encryptedFileInBytes;
+
+        BigInteger[] encryptedMessage = encryptMessage(file, p, q);
+        String messageString = getEncryptedMessage(encryptedMessage);
+        encryptedFileInBytes = messageString.getBytes(StandardCharsets.UTF_8);
+
+        try {
+            Files.write(new File(newFilename).toPath(), encryptedFileInBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void decryptFile(Path path, String newFilename, BigInteger p, BigInteger q) {
+        byte[] fileToDecrypt;
+        byte[] decryptedFile;
+
+        try {
+            fileToDecrypt = Files.readAllBytes(path);
+            String encryptedString = new String(fileToDecrypt, StandardCharsets.UTF_8);
+            BigInteger[] encryptedMessageArray = convertStringToArray(encryptedString);
+            String plaintext = decryptMessage(encryptedMessageArray, p, q);
+
+            decryptedFile = new byte[encryptedMessageArray.length];
+
+            for (int i = 0; i < plaintext.length(); i++) {
+                decryptedFile[i] = (byte) plaintext.codePointAt(i);
+            }
+
+            Files.write(new File(newFilename).toPath(), decryptedFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static int getFileSize(String filename) {
+        int size = 0;
+
+        try {
+            size = Files.readAllBytes(new File(filename).toPath()).length;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return size;
+    }
+
+    public static void saveByteArrayToFile(byte[] bytes, String filename) {
+        try {
+            Files.write(new File(filename).toPath(), bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static byte[] convertFileToByteArray(Path path) {
+        byte[] fileInBytesArray = null;
+
+        try {
+            fileInBytesArray = Files.readAllBytes(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return fileInBytesArray;
     }
 
 }
