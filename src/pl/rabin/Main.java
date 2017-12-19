@@ -18,6 +18,7 @@ public class Main {
     public static BigInteger q;
     public static BigInteger N;
     public static BigInteger[] key;
+    public static boolean isMPositive = true;
 
 
     /*public static void main(String[] args) {
@@ -256,7 +257,7 @@ public class Main {
             if (M.bitLength() <= 10) {
                 p = BigInteger.probablePrime(M.bitLength(), rand);
             } else {
-                p = BigInteger.probablePrime((int) Math.ceil(M.bitLength() / 2.0), rand);
+                p = BigInteger.probablePrime((int) Math.ceil(M.bitLength() / 2.0 + 1), rand);
             }
         }
         while(!p.mod(BigInteger.valueOf(4)).equals(BigInteger.valueOf(3)));
@@ -278,6 +279,10 @@ public class Main {
     public static void encryptFile(Path path, String newFilename, BigInteger N) {
         byte[] file = convertFileToByteArray(path);
         BigInteger M = new BigInteger(file);
+        if (M.compareTo(BigInteger.ZERO) < 0)
+            isMPositive = false;
+        else isMPositive = true;
+
         System.out.println("p: " + p);
         System.out.println("q: " + q);
         System.out.println("N: " + N);
@@ -289,7 +294,7 @@ public class Main {
             throw new IllegalArgumentException("Block cannot be more than n");
 
         BigInteger C = M.modPow(BigInteger.valueOf(2), N);
-
+        System.out.println("C: " + C.toString());
 
         try {
             Files.write(new File(newFilename).toPath(), C.toByteArray());
@@ -325,6 +330,12 @@ public class Main {
         System.out.println("p: " + p);
         System.out.println("q: " + q);
         System.out.println("N: " + N);
+
+        String first = null;
+        String second = null;
+        String third = null;
+        String forth = null;
+
         try {
             fileToDecrypt = Files.readAllBytes(path);
             BigInteger encryptedFile = new BigInteger(fileToDecrypt);
@@ -359,9 +370,20 @@ public class Main {
             Files.write(new File(newFilename + "2").toPath(), decryptedChar1.toByteArray());
             Files.write(new File(newFilename + "3").toPath(), decryptedChar2.toByteArray());
             Files.write(new File(newFilename + "4").toPath(), decryptedChar3.toByteArray());
+
+            first = decryptedChar.toString();
+            second = decryptedChar1.toString();
+            third = decryptedChar2.toString();
+            forth = decryptedChar3.toString();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println("M1: " + first);
+        System.out.println("M2: " + second);
+        System.out.println("M3: " + third);
+        System.out.println("M4: " + forth);
     }
 
     public static void decryptFile2(Path path, String newFilename, BigInteger p, BigInteger q) {
@@ -414,11 +436,25 @@ public class Main {
             BigInteger d3 = y_p.multiply(p).multiply(m_q1).add(y_q.multiply(q).multiply(m_p2)).mod(N);
             BigInteger d4 = y_p.multiply(p).multiply(m_q2).add(y_q.multiply(q).multiply(m_p2)).mod(N);
 
+            if (!isMPositive) {
+                d1 = d1.multiply(BigInteger.valueOf(-1));
+                d2 = d2.multiply(BigInteger.valueOf(-1));
+                d3 = d3.multiply(BigInteger.valueOf(-1));
+                d4 = d4.multiply(BigInteger.valueOf(-1));
+            }
+
+
 
             Files.write(new File(newFilename + "1").toPath(), d1.toByteArray());
             Files.write(new File(newFilename + "2").toPath(), d2.toByteArray());
             Files.write(new File(newFilename + "3").toPath(), d3.toByteArray());
             Files.write(new File(newFilename + "4").toPath(), d4.toByteArray());
+
+            System.out.println(d1.toString());
+            System.out.println(d2.toString());
+            System.out.println(d3.toString());
+            System.out.println(d4.toString());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
