@@ -23,12 +23,6 @@ public class rabin {
     private JButton decryptButton;
     private JTextField messageFieldAfterDecrypted;
     private JTextField encryptedMessageFieldAfterEncrypted;
-    private JLabel encryptedMessageLabel2;
-    private JLabel saltLabel2;
-    private JLabel saltLabel1;
-    private JLabel messageLabel2;
-    private JLabel messageLabel1;
-    private JLabel encryptedMessageLabel1;
     private JTabbedPane tabbedPane1;
     private JPanel panel1;
     private JButton openFileToEncryptButton;
@@ -96,6 +90,8 @@ public class rabin {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser c = new JFileChooser();
+                File workingDirectory = new File(System.getProperty("user.dir"));
+                c.setCurrentDirectory(workingDirectory);
                 int rVal = c.showOpenDialog(fileChooser);
                 if (rVal == JFileChooser.APPROVE_OPTION) {
                     File file = c.getSelectedFile();
@@ -153,7 +149,9 @@ public class rabin {
         openFileToDecryptButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFileChooser c= new JFileChooser();
+                JFileChooser c = new JFileChooser();
+                File workingDirectory = new File(System.getProperty("user.dir"));
+                c.setCurrentDirectory(workingDirectory);
                 int rVal = c.showOpenDialog(fileChooser);
                 if (rVal == JFileChooser.APPROVE_OPTION) {
                     String decryptedFilename = c.getSelectedFile().getPath();
@@ -181,6 +179,190 @@ public class rabin {
 
             }
         });
+
+        privateKeyP1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            void update() {
+                if (!privateKeyP1.getText().equals("")) {
+                    privateKeyP2.setText(privateKeyP1.getText());
+                }
+
+
+                if (!privateKeyP1.getText().equals("") && !privateKeyQ1.getText().equals("")) {
+                    BigInteger p = new BigInteger(privateKeyP1.getText());
+                    BigInteger q = new BigInteger(privateKeyQ1.getText());
+
+                    BigInteger n = p.multiply(q);
+                    publicKey1.setText(n.toString());
+                }
+            }
+        });
+
+        privateKeyQ1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            void update() {
+                if (!privateKeyQ1.getText().equals("")) {
+                    privateKeyQ2.setText(privateKeyQ1.getText());
+                }
+
+
+                if (!privateKeyP1.getText().equals("") && !privateKeyQ1.getText().equals("")) {
+                    BigInteger p = new BigInteger(privateKeyP1.getText());
+                    BigInteger q = new BigInteger(privateKeyQ1.getText());
+
+                    BigInteger n = p.multiply(q);
+                    publicKey1.setText(n.toString());
+                }
+            }
+        });
+
+        publicKey1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            void update() {
+                if (!publicKey1.getText().equals(""))
+                    publicKey2.setText(publicKey1.getText());
+            }
+        });
+
+        messageAfterEncryptedField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            void update() {
+                if (!messageAfterEncryptedField.getText().equals("")) {
+                    messageBeforeDecryptedField.setText(messageAfterEncryptedField.getText());
+                }
+            }
+        });
+
+        privateKeyP3.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            void update() {
+                if (!privateKeyP3.getText().equals("")) {
+                    privateKeyP4.setText(privateKeyP3.getText());
+                }
+
+
+                if (!privateKeyP3.getText().equals("") && !privateKeyQ3.getText().equals("")) {
+                    BigInteger p = new BigInteger(privateKeyP3.getText());
+                    BigInteger q = new BigInteger(privateKeyQ3.getText());
+
+                    BigInteger n = p.multiply(q);
+                    publicKey3.setText(n.toString());
+                }
+            }
+        });
+
+        privateKeyQ3.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            void update() {
+                if (!privateKeyQ3.getText().equals("")) {
+                    privateKeyQ4.setText(privateKeyQ3.getText());
+                }
+
+
+                if (!privateKeyP3.getText().equals("") && !privateKeyQ3.getText().equals("")) {
+                    BigInteger p = new BigInteger(privateKeyP3.getText());
+                    BigInteger q = new BigInteger(privateKeyQ3.getText());
+
+                    BigInteger n = p.multiply(q);
+                    publicKey3.setText(n.toString());
+                }
+            }
+        });
+
+        publicKey3.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            void update() {
+                if (!publicKey3.getText().equals(""))
+                    publicKey4.setText(publicKey3.getText());
+            }
+        });
+
 
     }
 

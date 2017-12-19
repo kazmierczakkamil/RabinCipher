@@ -36,7 +36,7 @@
                   <color color="-4473925"/>
                 </border>
                 <children>
-                  <component id="3a6e1" class="javax.swing.JLabel" binding="encryptedMessageLabel2">
+                  <component id="3a6e1" class="javax.swing.JLabel">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -52,7 +52,7 @@
                       <text value="Public key:"/>
                     </properties>
                   </component>
-                  <component id="93958" class="javax.swing.JLabel" binding="messageLabel2">
+                  <component id="93958" class="javax.swing.JLabel">
                     <constraints>
                       <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -175,7 +175,7 @@
                       <text value="Public key:"/>
                     </properties>
                   </component>
-                  <component id="e155e" class="javax.swing.JLabel" binding="encryptedMessageLabel1">
+                  <component id="e155e" class="javax.swing.JLabel">
                     <constraints>
                       <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
