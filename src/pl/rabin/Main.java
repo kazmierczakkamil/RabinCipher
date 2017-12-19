@@ -147,11 +147,11 @@ public class Main {
 
         BigInteger[] abFactors = calculateABFactors(p.intValue(), q.intValue()); // p and q as tested values
 
-        byte[] tempArray; // = new byte[1];
-        //boolean firstByteLoaded = false;
+        byte[] tempArray = new byte[2];
+        boolean firstByteLoaded = false;
         for (int i = 0; i < encryptedMessage.length; i++) {
             BigInteger[] mFactors = calculateMFactors(encryptedMessage[i], p.intValue(), q.intValue());
-            tempArray = new byte[1];
+
             // M1 message
             BigInteger decryptedChar = (((abFactors[0].multiply(mFactors[0]))
                     .add((abFactors[1].multiply(mFactors[2]))))
@@ -163,11 +163,11 @@ public class Main {
                 continue;
             } else if (tempBytes.length == 2 && (tempBytes[1]-tempBytes[0] == 1)) {
                 tempBytes[1] = (byte)(tempBytes[1] * (-1));
-                //int index = firstByteLoaded ? 1 : 0;
-                tempArray[0] = tempBytes[1];
-                //if (index == 1)
+                int index = firstByteLoaded ? 1 : 0;
+                tempArray[index] = tempBytes[1];
+                if (index == 1)
                     sb.append(new String(tempArray));
-                //firstByteLoaded = !firstByteLoaded;
+                firstByteLoaded = !firstByteLoaded;
                 continue;
             }
 
@@ -182,11 +182,11 @@ public class Main {
                 continue;
             } else if (tempBytes.length == 2 && (tempBytes[1]-tempBytes[0] == 1)) {
                 tempBytes[1] = (byte)(tempBytes[1] * (-1));
-                //int index = firstByteLoaded ? 1 : 0;
-                tempArray[0] = tempBytes[1];
-               // if (index == 1)
+                int index = firstByteLoaded ? 1 : 0;
+                tempArray[index] = tempBytes[1];
+                if (index == 1)
                     sb.append(new String(tempArray));
-                //firstByteLoaded = !firstByteLoaded;
+                firstByteLoaded = !firstByteLoaded;
                 continue;
             }
 
@@ -201,11 +201,11 @@ public class Main {
                 continue;
             } else if (tempBytes.length == 2 && (tempBytes[1]-tempBytes[0] == 1)) {
                 tempBytes[1] = (byte)(tempBytes[1] * (-1));
-                //int index = firstByteLoaded ? 1 : 0;
-                tempArray[0] = tempBytes[1];
-                //if (index == 1)
+                int index = firstByteLoaded ? 1 : 0;
+                tempArray[index] = tempBytes[1];
+                if (index == 1)
                     sb.append(new String(tempArray));
-                //firstByteLoaded = !firstByteLoaded;
+                firstByteLoaded = !firstByteLoaded;
                 continue;
             }
 
@@ -219,11 +219,11 @@ public class Main {
                 sb.append((char) tempBytes[0]);
             } else if (tempBytes.length == 2 && (tempBytes[1]-tempBytes[0] == 1)) {
                 tempBytes[1] = (byte)(tempBytes[1] * (-1));
-                //int index = firstByteLoaded ? 1 : 0;
-                tempArray[0] = tempBytes[1];
-                //if (index == 1)
+                int index = firstByteLoaded ? 1 : 0;
+                tempArray[index] = tempBytes[1];
+                if (index == 1)
                     sb.append(new String(tempArray));
-                //firstByteLoaded = !firstByteLoaded;
+                firstByteLoaded = !firstByteLoaded;
                 continue;
             }
         }
