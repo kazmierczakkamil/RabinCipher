@@ -131,15 +131,15 @@ public class rabin {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String encryptedFilenameString = encryptedFilename.getText();
-                BigInteger p = new BigInteger(privateKeyP3.getText());
-                BigInteger q = new BigInteger(privateKeyQ3.getText());
+                key = genKey(new File(fileToEncryptPath.getText()).toPath());
+                BigInteger N = key[0];
 
                 if (encryptedFilenameString.equals("")) {
                     JOptionPane.showMessageDialog(getPanel1(), "Error. You must set all fields!");
                     return;
                 }
 
-                encryptFile(new File(fileToEncryptPath.getText()).toPath(), encryptedFilenameString, p, q);
+                encryptFile(new File(fileToEncryptPath.getText()).toPath(), encryptedFilenameString, N);
 
                 JOptionPane.showMessageDialog(getPanel1(), "Encrypted successfully.");
 
@@ -166,15 +166,13 @@ public class rabin {
             public void actionPerformed(ActionEvent e) {
                 String encryptedFilename = fileToDecryptPath.getText();
                 String decryptedFilename = rabin.this.decryptedFilename.getText();
-                BigInteger p = new BigInteger(privateKeyP4.getText());
-                BigInteger q = new BigInteger(privateKeyQ4.getText());
 
                 if (encryptedFilename.equals("") || decryptedFilename.equals("")) {
                     JOptionPane.showMessageDialog(getPanel1(), "All fields must be set!");
                     return;
                 }
 
-                decryptFile(new File(encryptedFilename).toPath(), decryptedFilename, p, q);
+                decryptFile2(new File(encryptedFilename).toPath(), decryptedFilename, key[1], key[2]);
                 JOptionPane.showMessageDialog(getPanel1(), "Decrypted file was saved successfully!");
 
             }
