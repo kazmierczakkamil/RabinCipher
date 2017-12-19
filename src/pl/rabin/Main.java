@@ -20,28 +20,10 @@ public class Main {
 
     /*public static void main(String[] args) {
 
-        String message = "";
-        byte[] b = message.getBytes(StandardCharsets.US_ASCII);
-        String newStr = new String(b);
-        System.out.println(newStr);
-        byte bajt = 1;
-        byte bajt1 = -10;
-        byte bajty = (byte) (bajt1 + bajt);
-        System.out.println(bajty);
+        encryptFile(,enc,p,q);
 
 
-        BigInteger[] encryptedMessage = encryptMessage(message.getBytes(), p, q);
-        byte[] someByteArray = encryptedMessage[0].toByteArray(); // -59 encrypted on 3 bytes (1, -11, -73)
-        byte[] someByteArray2 = encryptedMessage[1].toByteArray();// -126 encrypted on 2 bytes (53, 38)
-
-        String someString = decryptMessage(encryptedMessage, p, q);
-        System.out.println(getEncryptedMessage(encryptedMessage));
-
-        BigInteger[] some = convertStringToArray(getEncryptedMessage(encryptedMessage));
-        //System.out.println(decryptMessage(encryptedMessage));
-
-
-    } */
+    }*/
 
 
     // roll one number
@@ -142,45 +124,6 @@ public class Main {
     }
 
 
-    static BigInteger[] decryptMessage(BigInteger encryptedMessage) {
-
-        ///// FOR TESTS
-        BigInteger publicKey = p.multiply(q);
-        /////
-
-        BigInteger[] messages = new BigInteger[4];
-        BigInteger[] abFactors = calculateABFactors(p.intValue(), q.intValue()); // p and q as tested values
-
-        // M1 message
-        BigInteger[] mFactors = calculateMFactors(encryptedMessage, p.intValue(), q.intValue());
-        BigInteger decryptedInt = (((abFactors[0].multiply(mFactors[0]))
-                .add((abFactors[1].multiply(mFactors[2]))))
-                .mod(publicKey));
-        messages[0] = decryptedInt;
-
-        // M2 message
-        decryptedInt = (((abFactors[0].multiply(mFactors[0]))
-                .add((abFactors[1].multiply(mFactors[3]))))
-                .mod(publicKey));
-        messages[1] = decryptedInt;
-
-        // M3 message
-        decryptedInt = (((abFactors[0].multiply(mFactors[1]))
-                .add((abFactors[1].multiply(mFactors[2]))))
-                .mod(publicKey));
-        messages[2] = decryptedInt;
-
-
-        // M4 message
-        decryptedInt = (((abFactors[0].multiply(mFactors[1]))
-                .add((abFactors[1].multiply(mFactors[3]))))
-                .mod(publicKey));
-        messages[3] = decryptedInt;
-
-        return messages;
-    }
-
-
     public static BigInteger[] convertStringToArray(String encryptedMessage) {
         String[] tabValues = encryptedMessage.split("\\_");
         BigInteger[] array = new BigInteger[tabValues.length];
@@ -201,11 +144,11 @@ public class Main {
 
         BigInteger[] abFactors = calculateABFactors(p.intValue(), q.intValue()); // p and q as tested values
 
-        byte[] tempArray = new byte[2];
-        boolean firstByteLoaded = false;
+        byte[] tempArray; // = new byte[1];
+        //boolean firstByteLoaded = false;
         for (int i = 0; i < encryptedMessage.length; i++) {
             BigInteger[] mFactors = calculateMFactors(encryptedMessage[i], p.intValue(), q.intValue());
-
+            tempArray = new byte[1];
             // M1 message
             BigInteger decryptedChar = (((abFactors[0].multiply(mFactors[0]))
                     .add((abFactors[1].multiply(mFactors[2]))))
@@ -217,11 +160,11 @@ public class Main {
                 continue;
             } else if (tempBytes.length == 2 && (tempBytes[1]-tempBytes[0] == 1)) {
                 tempBytes[1] = (byte)(tempBytes[1] * (-1));
-                int index = firstByteLoaded ? 1 : 0;
-                tempArray[index] = tempBytes[1];
-                if (index == 1)
+                //int index = firstByteLoaded ? 1 : 0;
+                tempArray[0] = tempBytes[1];
+                //if (index == 1)
                     sb.append(new String(tempArray));
-                firstByteLoaded = !firstByteLoaded;
+                //firstByteLoaded = !firstByteLoaded;
                 continue;
             }
 
@@ -236,11 +179,11 @@ public class Main {
                 continue;
             } else if (tempBytes.length == 2 && (tempBytes[1]-tempBytes[0] == 1)) {
                 tempBytes[1] = (byte)(tempBytes[1] * (-1));
-                int index = firstByteLoaded ? 1 : 0;
-                tempArray[index] = tempBytes[1];
-                if (index == 1)
+                //int index = firstByteLoaded ? 1 : 0;
+                tempArray[0] = tempBytes[1];
+               // if (index == 1)
                     sb.append(new String(tempArray));
-                firstByteLoaded = !firstByteLoaded;
+                //firstByteLoaded = !firstByteLoaded;
                 continue;
             }
 
@@ -255,11 +198,11 @@ public class Main {
                 continue;
             } else if (tempBytes.length == 2 && (tempBytes[1]-tempBytes[0] == 1)) {
                 tempBytes[1] = (byte)(tempBytes[1] * (-1));
-                int index = firstByteLoaded ? 1 : 0;
-                tempArray[index] = tempBytes[1];
-                if (index == 1)
+                //int index = firstByteLoaded ? 1 : 0;
+                tempArray[0] = tempBytes[1];
+                //if (index == 1)
                     sb.append(new String(tempArray));
-                firstByteLoaded = !firstByteLoaded;
+                //firstByteLoaded = !firstByteLoaded;
                 continue;
             }
 
@@ -273,11 +216,11 @@ public class Main {
                 sb.append((char) tempBytes[0]);
             } else if (tempBytes.length == 2 && (tempBytes[1]-tempBytes[0] == 1)) {
                 tempBytes[1] = (byte)(tempBytes[1] * (-1));
-                int index = firstByteLoaded ? 1 : 0;
-                tempArray[index] = tempBytes[1];
-                if (index == 1)
+                //int index = firstByteLoaded ? 1 : 0;
+                tempArray[0] = tempBytes[1];
+                //if (index == 1)
                     sb.append(new String(tempArray));
-                firstByteLoaded = !firstByteLoaded;
+                //firstByteLoaded = !firstByteLoaded;
                 continue;
             }
         }
@@ -287,20 +230,58 @@ public class Main {
 
 
 
-    public static void encryptFile(Path path, String newFilename, BigInteger p, BigInteger q) {
-        byte[] file = convertFileToByteArray(path);
-        byte[] encryptedFileInBytes;
+//    public static void encryptFile(Path path, String newFilename, BigInteger p, BigInteger q) {
+//        byte[] file = convertFileToByteArray(path);
+//        byte[] encryptedFileInBytes;
+//
+//        BigInteger[] encryptedMessage = encryptMessage(file, p, q);
+//        String messageString = getEncryptedMessage(encryptedMessage);
+//        encryptedFileInBytes = messageString.getBytes(StandardCharsets.UTF_8);
+//
+//        try {
+//            Files.write(new File(newFilename).toPath(), encryptedFileInBytes);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-        BigInteger[] encryptedMessage = encryptMessage(file, p, q);
-        String messageString = getEncryptedMessage(encryptedMessage);
-        encryptedFileInBytes = messageString.getBytes(StandardCharsets.UTF_8);
+        public static void encryptFile(Path path, String newFilename, BigInteger p, BigInteger q) {
+        byte[] file = convertFileToByteArray(path);
+
+        BigInteger n = p.multiply(q);
+        BigInteger M = new BigInteger(file);
+
+        if (M.compareTo(n) >= 0)
+            throw new IllegalArgumentException("Block cannot be more than n");
+
+        BigInteger C = M.modPow(BigInteger.valueOf(2), n);
+
 
         try {
-            Files.write(new File(newFilename).toPath(), encryptedFileInBytes);
+            Files.write(new File(newFilename).toPath(), C.toByteArray());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
+//    public static void decryptFile(Path path, String newFilename, BigInteger p, BigInteger q) {
+//        byte[] fileToDecrypt;
+//        byte[] decryptedFile;
+//
+//        try {
+//            fileToDecrypt = Files.readAllBytes(path);
+//            String encryptedString = new String(fileToDecrypt, StandardCharsets.UTF_8);
+//            BigInteger[] encryptedMessageArray = convertStringToArray(encryptedString);
+//            String plaintext = decryptMessage(encryptedMessageArray, p, q);
+//
+//            decryptedFile = plaintext.getBytes(StandardCharsets.UTF_8);
+//
+//            Files.write(new File(newFilename).toPath(), decryptedFile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public static void decryptFile(Path path, String newFilename, BigInteger p, BigInteger q) {
         byte[] fileToDecrypt;
@@ -308,13 +289,38 @@ public class Main {
 
         try {
             fileToDecrypt = Files.readAllBytes(path);
-            String encryptedString = new String(fileToDecrypt, StandardCharsets.UTF_8);
-            BigInteger[] encryptedMessageArray = convertStringToArray(encryptedString);
-            String plaintext = decryptMessage(encryptedMessageArray, p, q);
+            BigInteger encryptedFile = new BigInteger(fileToDecrypt);
 
-            decryptedFile = plaintext.getBytes(StandardCharsets.UTF_8);
+            BigInteger publicKey = p.multiply(q);
+            BigInteger[] abFactors = calculateABFactors(p.intValue(), q.intValue());
 
-            Files.write(new File(newFilename).toPath(), decryptedFile);
+            BigInteger[] mFactors = calculateMFactors(encryptedFile, p.intValue(), q.intValue());
+
+            // M1 message
+            BigInteger decryptedChar = (((abFactors[0].multiply(mFactors[0]))
+                    .add((abFactors[1].multiply(mFactors[2]))))
+                    .mod(publicKey));
+
+            // M2 message
+            BigInteger decryptedChar1 = (((abFactors[0].multiply(mFactors[0]))
+                    .add((abFactors[1].multiply(mFactors[3]))))
+                    .mod(publicKey));
+
+            // M3 message
+            BigInteger decryptedChar2 = (((abFactors[0].multiply(mFactors[1]))
+                    .add((abFactors[1].multiply(mFactors[2]))))
+                    .mod(publicKey));
+
+            // M4 message
+            BigInteger decryptedChar3 = (((abFactors[0].multiply(mFactors[1]))
+                    .add((abFactors[1].multiply(mFactors[3]))))
+                    .mod(publicKey));
+
+
+            Files.write(new File(newFilename + "1").toPath(), decryptedChar.toByteArray());
+            Files.write(new File(newFilename + "2").toPath(), decryptedChar1.toByteArray());
+            Files.write(new File(newFilename + "3").toPath(), decryptedChar2.toByteArray());
+            Files.write(new File(newFilename + "4").toPath(), decryptedChar3.toByteArray());
         } catch (IOException e) {
             e.printStackTrace();
         }
